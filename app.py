@@ -8,7 +8,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Hugging Face API configuration
-HF_API_URL = "https://api-inference.huggingface.co/models/abdulwaheed1/english-to-urdu-translation-mbart"
+HF_API_URL = "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-ur"
 HF_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 
 def translate_text(text):
@@ -22,12 +22,7 @@ def translate_text(text):
     }
     
     payload = {
-        "inputs": text,
-        "parameters": {
-            "max_length": 512,
-            "num_beams": 4,
-            "early_stopping": True
-        }
+        "inputs": text
     }
     
     try:
@@ -37,7 +32,9 @@ def translate_text(text):
         result = response.json()
         
         if isinstance(result, list) and len(result) > 0:
-            return {"translation": result[0].get("translated_text", "")}
+            # Helsinki-NLP models return translation in 'translation_text' field
+            translation = result[0].get("translation_text", "")
+            return {"translation": translation}
         else:
             return {"error": "No translation received"}
             

@@ -102,9 +102,9 @@ git push heroku main
 - `HUGGINGFACE_API_TOKEN`: Your Hugging Face API token
 
 ### Model Used
-- Model: `abdulwaheed1/english-to-urdu-translation-mbart`
+- Model: `Helsinki-NLP/opus-mt-en-ur`
 - Provider: Hugging Face Inference API
-- Language Pair: English (en_XX) → Urdu (ur_PK)
+- Language Pair: English → Urdu
 
 ## 📄 License
 MIT License - feel free to use this project for your own purposes!
