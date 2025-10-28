@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talafooz - English to Urdu Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FF6B35;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 107, 53, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #FFFFFF;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section, .output-section {
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-section:hover, .output-section:hover {
+            border-color: #FF6B35;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #FF6B35;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .text-area {
+            width: 100%;
+            min-height: 200px;
+            background-color: #000000;
+            color: #FFFFFF;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            font-family: 'Arial', sans-serif;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .text-area:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .text-area::placeholder {
+            color: #666;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: #FF6B35;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            background-color: #E55A2B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            border: 2px solid #333;
+            color: #FF6B35;
+            font-weight: bold;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            border-top-color: #FF6B35;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #ff4444;
+            background-color: #2a1a1a;
+            border-color: #ff4444;
+        }
+
+        .success {
+            color: #44ff44;
+            background-color: #1a2a1a;
+            border-color: #44ff44;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+
+        .char-count {
+            text-align: right;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Talafooz</h1>
+            <p class="subtitle">English to Urdu Translator</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">English Text</h2>
+                <textarea 
+                    id="inputText" 
+                    class="text-area" 
+                    placeholder="Enter your English text here..."
+                    maxlength="1000"
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span>/1000 characters
+                </div>
+                <div class="button-group">
+                    <button id="translateBtn" class="btn" disabled>Translate</button>
+                    <button id="clearBtn" class="btn">Clear</button>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">Urdu Translation</h2>
+                <textarea 
+                    id="outputText" 
+                    class="text-area" 
+                    placeholder="Translation will appear here..."
+                    readonly
+                ></textarea>
+                <div class="button-group">
+                    <button id="copyBtn" class="btn" disabled>Copy Translation</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="status" class="status">
+            Ready to translate!
+        </div>
+
+        <div class="footer">
+            <p>Powered by Hugging Face • Built with Flask</p>
+        </div>
+    </div>
+
+    <script>
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+        const translateBtn = document.getElementById('translateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const status = document.getElementById('status');
+        const charCount = document.getElementById('charCount');
+
+        // Update character count
+        inputText.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            if (count > 0) {
+                translateBtn.disabled = false;
+            } else {
+                translateBtn.disabled = true;
+                copyBtn.disabled = true;
+            }
+        });
+
+        // Translate function
+        async function translateText() {
+            const text = inputText.value.trim();
+            if (!text) return;
+
+            translateBtn.disabled = true;
+            status.innerHTML = '<div class="loading"></div>Translating...';
+            status.className = 'status';
+
+            try {
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    status.textContent = `Error: ${result.error}`;
+                    status.className = 'status error';
+                } else {
+                    outputText.value = result.translation;
+                    copyBtn.disabled = false;
+                    status.textContent = 'Translation completed!';
+                    status.className = 'status success';
+                }
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                status.className = 'status error';
+            } finally {
+                translateBtn.disabled = false;
+            }
+        }
+
+        // Copy function
+        function copyTranslation() {
+            const translation = outputText.value;
+            if (translation) {
+                navigator.clipboard.writeText(translation).then(() => {
+                    status.textContent = 'Translation copied to clipboard!';
+                    status.className = 'status success';
+                }).catch(() => {
+                    status.textContent = 'Failed to copy to clipboard';
+                    status.className = 'status error';
+                });
+            }
+        }
+
+        // Clear function
+        function clearText() {
+            inputText.value = '';
+            outputText.value = '';
+            charCount.textContent = '0';
+            translateBtn.disabled = true;
+            copyBtn.disabled = true;
+            status.textContent = 'Text cleared!';
+            status.className = 'status';
+        }
+
+        // Event listeners
+        translateBtn.addEventListener('click', translateText);
+        copyBtn.addEventListener('click', copyTranslation);
+        clearBtn.addEventListener('click', clearText);
+
+        // Enter key to translate
+        inputText.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                translateText();
+            }
+        });
+    </script>
+</body>
+</html>
